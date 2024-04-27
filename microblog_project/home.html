@@ -4,11 +4,12 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Microblog</title>
+        <link rel="stylesheet" href="styles.css" />
     </head>
     <body>
         <header class="navbar">
             <div class="navbar__brand">
-                <img src="logo.svg" alt="Microblog logo" />Microblog
+                <img class="navbar__logo" src="logo.svg" alt="Microblog logo" />Microblog
             </div>
             <ul class="navbar__navigation">
                 <li class="navbar__navigation-item"><a href="#" class="navbar__link">Recent</a></li>
@@ -39,6 +40,20 @@
                 </article>
             </section>
         </main>
-        <footer></footer>
+        <footer class="footer">
+            <div class="footer__content">
+                <section class="left">
+                    <a class="footer__item">Made by Arthur Mateu</a>
+                    <a class="footer__item" href="#">Check out the other projects in this course!</a>
+                </section>
+                <section class="right">
+                    <div class="footer__column">
+                        <a class="footer__item">Recent</a>
+                        <a class="footer__item">Calendar</a>
+                        <a class="footer__item">How this was made</a>
+                    </div>
+                </section>
+            </div>
+        </footer>
     </body>
 </html>
