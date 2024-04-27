@@ -18,10 +18,12 @@
         <main>
             <section>
                 <h1>Add a new entry</h1>
-                <form action="/entry" method="POST">
-                    <label for="sample-field">Sample</label>
-                    <input type="text" name="sample" id="sample-field" />
-                    <button type="submit">Submit!</button>
+                <form class="form" action="/entry" method="POST">
+                    <p class="form__input">
+                        <label class="form__label" for="entry">Entry contents:</label>
+                        <textarea class="form__textarea" name="content" id="entry"></textarea>
+                    </p>
+                    <button class="form__submit" type="submit">Add entry</button>
                 </form>
             </section>
             <section>
