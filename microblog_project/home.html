@@ -16,13 +16,11 @@
                 <li class="navbar__navigation-item"><a href="#" class="navbar__link">Calendar</a></li>
             </ul>
         </header>
-        <main>
+        <main class="main">
             <section>
-                <h1>Add a new entry</h1>
                 <form class="form" action="/entry" method="POST">
                     <p class="form__input">
-                        <label class="form__label" for="entry">Entry contents:</label>
-                        <textarea class="form__textarea" name="content" id="entry"></textarea>
+                        <textarea class="form__textarea" name="content" id="entry" aria-label="Entry contents" placeholder="Add a new entry!"></textarea>
                     </p>
                     <button class="form__submit" type="submit">Add entry</button>
                 </form>
