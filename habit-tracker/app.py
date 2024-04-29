@@ -33,5 +33,6 @@ def add_habit():
     return render_template(
         "add_habit.html",
         title="Habit Tracker - Add Habit",
-        selected_date=datetime.date.today() # TODO: Find better implementation (add habit in the future/past)
+        # TODO: Find better implementation (add habit in the future/past)
+        selected_date=datetime.date.today()
     )
