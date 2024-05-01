@@ -1,4 +1,4 @@
-from flask import Flask, render_template, abort
+from flask import Flask, render_template, abort, redirect
 
 app = Flask(__name__)
 
@@ -49,3 +49,14 @@ def project(slug):
     if slug not in slug_to_project:
         abort(404)
     return render_template(f"project_{slug}.html", project=slug_to_project[slug])
+
+
+@app.errorhandler(404)
+def page_not_found(error):
+    return render_template("404.html"), 404
+
+
+@app.errorhandler(500)
+def internal_server_error(error):
+    # TODO: somehow this doesn't automatically redirect to the link provided. It at least informs the user they are getting redirected...!
+    return redirect("https://www.google.com/search?q=evil+cheese", 500)
