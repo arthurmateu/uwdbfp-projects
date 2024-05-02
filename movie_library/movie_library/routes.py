@@ -1,4 +1,5 @@
 import uuid
+import functools
 from flask import Blueprint, render_template, session, redirect, request, url_for, current_app, flash
 from dataclasses import asdict
 
@@ -11,9 +12,24 @@ pages = Blueprint(
 )
 
 
+def login_required(route):
+    @functools.wraps(route)
+    def route_wrapper(*args, **kwargs):
+        if session.get("email") is None:
+            return redirect(url_for(".login"))
+
+        return route(*args, **kwargs)
+
+    return route_wrapper
+
+
 @pages.route("/")
+@login_required
 def index():
-    movie_data = current_app.db.movie.find({})
+    user_data = current_app.db.user.find_one({"email": session["email"]})
+    user = User(**user_data)
+    
+    movie_data = current_app.db.movie.find({"_id": {"$in": user.movies}})
     movies = [Movie(**movie) for movie in movie_data]
 
     return render_template(
@@ -24,6 +40,7 @@ def index():
 
 
 @pages.route("/add", methods=["GET", "POST"])
+@login_required
 def add_movie():
     form = MovieForm()
 
@@ -36,6 +53,9 @@ def add_movie():
         )
 
         current_app.db.movie.insert_one(asdict(movie))
+        current_app.db.user.update_one(
+            {"_id": session["user_id"]}, {"$push": {"movies": movie._id}}
+        )
 
         return redirect(url_for(".movie", _id=movie._id))
 
@@ -45,6 +65,7 @@ def add_movie():
 
 
 @pages.get("/movie/<string:_id>/rate")
+@login_required
 def rate_movie(_id):
     rating = int(request.args.get("rating"))
     current_app.db.movie.update_one({"_id": _id}, {"$set": {"rating": rating}})
@@ -53,6 +74,7 @@ def rate_movie(_id):
 
 
 @pages.get("/movie/<string:_id>/watch")
+@login_required
 def watch_today(_id):
     current_app.db.movie.update_one(
         {"_id": _id}, {"$set": {"last_watched": datetime.datetime.today()}}
@@ -79,6 +101,7 @@ def toggle_theme():
 
 
 @pages.route("/edit/<string:_id>", methods=["GET", "POST"])
+@login_required
 def edit_movie(_id: str):
     movie = Movie(**current_app.db.movie.find_one({"_id": _id}))
     form = ExtendedMovieForm(obj=movie)
