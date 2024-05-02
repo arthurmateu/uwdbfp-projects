@@ -1,9 +1,10 @@
 import uuid
-from flask import Blueprint, render_template, session, redirect, request, url_for, current_app
+from flask import Blueprint, render_template, session, redirect, request, url_for, current_app, flash
 from dataclasses import asdict
 
-from movie_library.forms import MovieForm, ExtendedMovieForm
-from movie_library.models import Movie
+from movie_library.forms import MovieForm, ExtendedMovieForm, RegisterForm
+from movie_library.models import Movie, User
+from passlib.hash import pbkdf2_sha256
 
 pages = Blueprint(
     "pages", __name__, template_folder="templates", static_folder="static"
@@ -94,3 +95,28 @@ def edit_movie(_id: str):
         current_app.db.movie.update_one({"_id": movie._id}, {"$set": asdict(movie)})
         return redirect(url_for(".movie", _id=movie._id))
     return render_template("movie_form.html", movie=movie, form=form)
+
+
+@pages.route("/register", methods=["POST", "GET"])
+def register():
+    if session.get("email"):
+        return redirect(url_for(".index"))
+
+    form = RegisterForm()
+
+    if form.validate_on_submit():
+        user = User(
+            _id=uuid.uuid4().hex,
+            email=form.email.data,
+            password=pbkdf2_sha256.hash(form.password.data),
+        )
+
+        current_app.db.user.insert_one(asdict(user))
+
+        flash("User registered successfully", "success")
+
+        return redirect(url_for(".index"))
+
+    return render_template(
+        "register.html", title="Movies Watchlist - Register", form=form
+    )
