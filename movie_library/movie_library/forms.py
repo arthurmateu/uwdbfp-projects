@@ -70,3 +70,9 @@ class ExtendedMovieForm(MovieForm):
     video_link = URLField("Video link")
 
     submit = SubmitField("Submit")
+
+
+class LoginForm(FlaskForm):
+    email = StringField("Email", validators=[InputRequired(), Email()])
+    password = PasswordField("Password", validators=[InputRequired()])
+    submit = SubmitField("Login")
