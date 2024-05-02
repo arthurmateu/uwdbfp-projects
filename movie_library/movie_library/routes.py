@@ -1,5 +1,5 @@
 import uuid
-from flask import Blueprint, render_template, session, redirect, request, url_for
+from flask import Blueprint, render_template, session, redirect, request, url_for, current_app
 from dataclasses import asdict
 
 from movie_library.forms import MovieForm
